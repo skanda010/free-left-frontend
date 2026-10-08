@@ -16,65 +16,65 @@
       <span><strong>Free-Left Monitor</strong><small>INTERSECTION CONTROL</small></span>
     </a>
     <div class="nav-label">WORKSPACE</div>
-    <a class="nav-item active" href="#overview"><span>◫</span> Overview</a>
-    <a class="nav-item" href="#monitoring"><span>◉</span> Live monitoring</a>
-    <a class="nav-item" href="#analytics"><span>▥</span> Analytics</a>
-    <a class="nav-item" href="#events"><span>≡</span> Event log</a>
+    <a class="nav-item active" href="#overview" aria-current="location" aria-label="Overview" title="Overview"><span>◫</span> Overview</a>
+    <a class="nav-item" href="#monitoring" aria-label="Monitoring" title="Monitoring"><span>◉</span> Monitoring</a>
+    <a class="nav-item" href="#analytics" aria-label="Analytics" title="Analytics"><span>▥</span> Analytics</a>
+    <a class="nav-item" href="#events" aria-label="Event log" title="Event log"><span>≡</span> Event log</a>
     <div class="sidebar-spacer"></div>
     <div class="intersection-card">
       <span class="live-dot"></span>
       <div><small>INTERSECTION</small><strong>Junction A · North</strong></div>
       <span class="chevron">⌄</span>
     </div>
-    <a class="nav-item help-link" href="#about"><span>ⓘ</span> About this prototype</a>
+    <a class="nav-item help-link" href="#settings" aria-label="System settings" title="System settings"><span>⚙</span> System settings</a>
   </aside>
 
-  <main class="main-content" id="overview">
+  <main class="main-content">
     <header class="topbar">
-      <div class="breadcrumbs">Workspace <span>/</span> <strong>Overview</strong></div>
-      <div class="topbar-right"><span class="demo-badge"><i></i> DEMO MODE</span><span class="avatar" aria-label="Project dashboard">FP</span></div>
+      <div class="breadcrumbs">Workspace <span>/</span> <strong id="breadcrumbCurrent">Overview</strong></div>
+      <div class="topbar-right"><span class="demo-badge"><i></i> SAMPLE DATA</span><span class="avatar" aria-label="Intersection dashboard">IL</span></div>
     </header>
 
-    <section class="page-heading">
-      <div><p class="eyebrow">TRAFFIC OPERATIONS</p><h1>Intersection overview</h1><p class="subheading">Monitor free-left movement, risk and signal decisions in one place.</p></div>
-      <div class="heading-actions"><span class="updated"><span class="live-dot"></span> Monitoring active</span><button class="button button-secondary" id="refreshBtn" type="button"><span aria-hidden="true">↻</span> Refresh</button></div>
+    <section class="page-heading" id="overview" data-section-name="Overview">
+      <div><p class="eyebrow">INTELLIGENT TRAFFIC MANAGEMENT</p><h1>Intersection overview</h1><p class="subheading">Monitor free-left movement, risk and signal decisions in one place.</p></div>
+      <div class="heading-actions"><span class="updated"><span class="live-dot"></span> System overview</span><button class="button button-secondary" id="refreshBtn" type="button"><span aria-hidden="true">↻</span> Refresh</button></div>
     </section>
 
     <section class="metric-grid" aria-label="Current traffic metrics">
       <article class="metric-card"><div class="metric-top"><span>Vehicles in free-left lane</span><span class="metric-icon blue">↱</span></div><div class="metric-value" id="vehicleCount">08</div><div class="metric-foot"><span class="trend up">↗ <span id="vehicleTrend">2</span></span> vs previous interval</div></article>
       <article class="metric-card"><div class="metric-top"><span>Longest blocking time</span><span class="metric-icon amber">◷</span></div><div class="metric-value"><span id="blockDuration">00:18</span><small>sec</small></div><div class="metric-foot"><span class="trend neutral">Threshold: <span id="thresholdLabel">30</span>s</span></div></article>
-      <article class="metric-card"><div class="metric-top"><span>Intersection risk</span><span class="metric-icon risk-icon">⌁</span></div><div class="metric-value"><span class="risk-pill low" id="riskLevel">LOW</span></div><div class="metric-foot">Based on live flow + report history</div></article>
-      <article class="metric-card"><div class="metric-top"><span>Signal mode</span><span class="metric-icon green">◉</span></div><div class="metric-value mode-value" id="signalMode">Free-left</div><div class="metric-foot"><span class="mode-status"><i></i><span id="signalReason">Adaptive control is active</span></span></div></article>
+      <article class="metric-card"><div class="metric-top"><span>Intersection risk</span><span class="metric-icon risk-icon">⌁</span></div><div class="metric-value"><span class="risk-pill low" id="riskLevel">LOW</span></div><div class="metric-foot">Traffic flow and report history</div></article>
+      <article class="metric-card"><div class="metric-top"><span>Signal mode</span><span class="metric-icon green">◉</span></div><div class="metric-value mode-value" id="signalMode">Free-left</div><div class="metric-foot"><span class="mode-status"><i></i><span id="signalReason">Adaptive strategy preview</span></span></div></article>
     </section>
 
-    <section class="content-grid" id="monitoring">
+    <section class="content-grid" id="monitoring" data-section-name="Monitoring">
       <article class="panel video-panel">
-        <div class="panel-heading"><div><p class="eyebrow">CAMERA 01 · NORTH APPROACH</p><h2>Live monitoring</h2></div><span class="source-status"><i></i><span id="sourceStatus">DEMO FEED</span></span></div>
+        <div class="panel-heading"><div><p class="eyebrow">CAMERA 01 · NORTH APPROACH</p><h2>Intersection monitoring</h2></div><span class="source-status"><i></i><span id="sourceStatus">SAMPLE FEED</span></span></div>
         <div class="video-stage" id="videoStage">
           <video id="videoPreview" controls playsinline hidden aria-label="Uploaded traffic video preview"></video>
           <div class="feed-placeholder" id="feedPlaceholder">
             <div class="road-scene" aria-hidden="true"><div class="skyline"><i></i><i></i><i></i><i></i><i></i></div><div class="road"><span class="lane-mark"></span><span class="lane-mark"></span><span class="lane-mark"></span><span class="car car-one">●</span><span class="car car-two">●</span></div><div class="roi-box"><span>FREE-LEFT ROI</span></div></div>
             <div class="feed-caption"><span class="feed-pulse"></span><span id="feedCaption">Sample intersection view</span></div>
           </div>
-          <div class="video-overlay"><span class="recording-dot"></span> <span id="feedClock">DEMO</span><span class="overlay-right">ROI · ACTIVE</span></div>
+          <div class="video-overlay"><span class="recording-dot"></span> <span id="feedClock">SAMPLE</span><span class="overlay-right">ROI · PREVIEW</span></div>
         </div>
         <div class="video-controls"><div class="camera-meta"><span class="camera-icon">◉</span><span><strong>North approach</strong><small id="videoFileName">No camera connected</small></span></div><label for="videoUpload" class="button button-small button-secondary upload-label">Upload video</label><input id="videoUpload" type="file" accept="video/*" hidden></div>
-        <p class="panel-note">Video preview only. Vehicle detection and ROI annotations appear when connected to the vision backend.</p>
+        <p class="panel-note">Sample view only. Live camera input and vehicle detection become available when the vision service is connected.</p>
       </article>
 
       <article class="panel signal-panel">
         <div class="panel-heading"><div><p class="eyebrow">DECISION ENGINE</p><h2>Signal control</h2></div><button class="icon-button" id="modeInfoBtn" type="button" aria-label="Signal mode details">···</button></div>
         <div class="signal-display"><div class="traffic-light" id="trafficLight" aria-label="Free-left signal is green"><span class="lamp red-lamp"></span><span class="lamp amber-lamp"></span><span class="lamp green-lamp active"></span></div><div class="signal-copy"><span class="signal-label">CURRENT STATE</span><strong id="signalDisplayMode">Free-left</strong><span id="signalDisplayHint">Movement permitted</span></div></div>
         <div class="signal-divider"></div>
-        <div class="control-row"><div><strong>Control mode</strong><small id="controlModeHint">Automatic decisions enabled</small></div><div class="segmented" role="group" aria-label="Control mode"><button type="button" class="segment active" id="autoModeBtn" aria-pressed="true">Auto</button><button type="button" class="segment" id="manualModeBtn" aria-pressed="false">Manual</button></div></div>
+        <div class="control-row"><div><strong>Control mode</strong><small id="controlModeHint">Automatic strategy preview</small></div><div class="segmented" role="group" aria-label="Control mode"><button type="button" class="segment active" id="autoModeBtn" aria-pressed="true">Auto</button><button type="button" class="segment" id="manualModeBtn" aria-pressed="false">Manual</button></div></div>
         <button class="button button-primary override-button" id="overrideBtn" type="button" disabled>Switch to protected-left</button>
         <p class="panel-note" id="overrideNote">Switch to Manual to control the signal.</p>
       </article>
     </section>
 
-    <section class="content-grid secondary-grid" id="analytics">
+    <section class="content-grid secondary-grid" id="analytics" data-section-name="Analytics">
       <article class="panel chart-panel">
-        <div class="panel-heading"><div><p class="eyebrow">LIVE FLOW</p><h2>Vehicles by 5-minute interval</h2></div><select id="chartRange" aria-label="Chart range"><option value="hour">Last hour</option><option value="day">Today</option></select></div>
+        <div class="panel-heading"><div><p class="eyebrow">TRAFFIC FLOW</p><h2>Vehicles by 5-minute interval</h2></div><select id="chartRange" aria-label="Chart range"><option value="hour">Last hour</option><option value="day">Today</option></select></div>
         <div class="chart-wrap"><div class="chart-y-labels" aria-hidden="true"><span>20</span><span>15</span><span>10</span><span>5</span><span>0</span></div><canvas id="trafficChart" role="img" aria-label="Bar chart showing vehicle counts by interval"></canvas></div>
         <div class="chart-legend"><span><i></i> Vehicles detected</span><span class="chart-summary" id="chartSummary">Peak interval: 14 vehicles</span></div>
       </article>
@@ -84,21 +84,21 @@
         <div class="history-score"><span class="risk-pill medium" id="historyRisk">MEDIUM</span><span class="history-score-copy"><strong id="reportName">No report uploaded</strong><small id="reportSummary">Upload a PDF traffic report to add context</small></span></div>
         <div class="history-facts"><div><span>Violation records</span><strong id="violationCount">—</strong></div><div><span>Peak-hour congestion</span><strong id="peakCongestion">—</strong></div></div>
         <label for="reportUpload" class="button button-secondary report-upload"><span aria-hidden="true">↑</span> Upload traffic report PDF</label><input id="reportUpload" type="file" accept="application/pdf,.pdf" hidden>
-        <p class="panel-note">PDF parsing and historical scoring require the analytics backend.</p>
+        <p class="panel-note">Report analysis and historical scoring become available when the analytics service is connected.</p>
       </article>
     </section>
 
-    <section class="panel events-panel" id="events">
+    <section class="panel events-panel" id="events" data-section-name="Event log">
       <div class="panel-heading"><div><p class="eyebrow">AUDIT TRAIL</p><h2>Recent events</h2></div><div class="event-actions"><button class="button button-small button-secondary" id="exportBtn" type="button">↓ Export CSV</button><button class="text-button" id="viewAllEvents" type="button">View all <span>→</span></button></div></div>
       <div class="table-scroll"><table><thead><tr><th>EVENT</th><th>DETAIL</th><th>TIME</th><th>LEVEL</th></tr></thead><tbody id="eventLog"></tbody></table></div>
       <div class="empty-events" id="emptyEvents" hidden>No events yet. Signal changes and uploads will appear here.</div>
     </section>
 
-    <section class="settings-strip" id="about"><div><span class="settings-icon">⚙</span><span><strong>Prototype controls</strong><small>Adjust the blocking threshold used by the demo risk indicator.</small></span></div><label for="thresholdRange">Blocking threshold <strong><span id="thresholdValue">30</span>s</strong></label><input id="thresholdRange" type="range" min="10" max="60" step="5" value="30" aria-label="Blocking threshold in seconds"></section>
+    <section class="settings-strip" id="settings" data-section-name="System settings"><div><span class="settings-icon">⚙</span><span><strong>Risk monitoring settings</strong><small>Set the blocking-time threshold used to flag intersection risk.</small></span></div><label for="thresholdRange">Blocking threshold <strong><span id="thresholdValue">30</span>s</strong></label><input id="thresholdRange" type="range" min="10" max="60" step="5" value="30" aria-label="Blocking threshold in seconds"></section>
     <footer class="footer"><span>Team <strong>Techies.exe</strong> · Guide <strong>Ms. Tejaswi Nandyala</strong> · T-John Institute of Technology</span><span>Intelligent traffic monitoring · Adaptive signal management</span></footer>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <dialog id="infoDialog" class="info-dialog"><form method="dialog"><button class="dialog-close" aria-label="Close">×</button><p class="eyebrow">SIGNAL CONTROL</p><h2>How decisions work</h2><p>In the connected system, the controller combines free-left lane activity with historical traffic risk to choose Free-left or Protected-left. Auto mode will follow backend decisions. Manual mode enables the override button.</p><p>This page currently uses demo values. No live camera, vehicle detector, or controller is connected.</p><button class="button button-primary">Got it</button></form></dialog>
+  <dialog id="infoDialog" class="info-dialog"><form method="dialog"><button class="dialog-close" aria-label="Close">×</button><p class="eyebrow">SIGNAL CONTROL</p><h2>How decisions work</h2><p>In a connected deployment, the controller can combine free-left lane activity with historical traffic risk to select Free-left or Protected-left. Automatic decisions and manual overrides depend on the connected signal service.</p><p>This dashboard currently displays sample values. No live camera, vehicle detector, or signal controller is connected.</p><button class="button button-primary">Got it</button></form></dialog>
 </body>
 </html>
