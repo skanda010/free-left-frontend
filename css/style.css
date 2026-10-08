@@ -42,4 +42,5 @@ body{background:linear-gradient(180deg,#f01818 0%,#c50000 22%,#780000 48%,#3a000
 .live-dot,.source-status i,.mode-status i{background:var(--green);box-shadow:0 0 9px #42d7a780}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 .main-content section[id],.main-content[id]{scroll-margin-top:16px}
+.avatar-mark{font-size:19px;line-height:1}
 @media(max-width:820px){.brand>span:last-child,.nav-label,.intersection-card div,.intersection-card .chevron{display:none}.nav-item{display:flex;font-size:0}.nav-item:not(.active){display:flex}.help-link{display:flex}.source-status i{background:#e6b756;box-shadow:none}}
