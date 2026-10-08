@@ -44,15 +44,15 @@
     const protectedMode = state.mode === 'Protected-left';
     $('#signalMode').textContent = protectedMode ? 'Protected-left' : 'Free-left';
     $('#signalDisplayMode').textContent = protectedMode ? 'Protected-left' : 'Free-left';
-    $('#signalDisplayHint').textContent = protectedMode ? 'Movement held for safety' : 'Movement permitted';
-    $('#signalReason').textContent = reason || (state.control === 'auto' ? 'Adaptive control is active' : 'Manual signal control');
+    $('#signalDisplayHint').textContent = protectedMode ? 'Sample state · movement held' : 'Sample state · movement permitted';
+    $('#signalReason').textContent = reason || (state.control === 'auto' ? 'Adaptive strategy preview' : 'Manual control preview');
     const light = $('#trafficLight');
     light.querySelectorAll('.lamp').forEach((lamp) => lamp.classList.remove('active'));
     light.querySelector(protectedMode ? '.red-lamp' : '.green-lamp').classList.add('active');
     light.setAttribute('aria-label', `${state.mode} signal is ${protectedMode ? 'red' : 'green'}`);
     $('#overrideBtn').textContent = protectedMode ? 'Switch to free-left' : 'Switch to protected-left';
     $('#overrideBtn').disabled = state.control !== 'manual';
-    $('#overrideNote').textContent = state.control === 'manual' ? 'Manual override is active. Confirm the lane is clear before switching.' : 'Switch to Manual to control the signal.';
+    $('#overrideNote').textContent = state.control === 'manual' ? 'Preview only. Signal changes are not sent to a controller.' : 'Switch to Manual to preview a signal change.';
   }
 
   function setControl(mode) {
@@ -62,9 +62,9 @@
     $('#manualModeBtn').classList.toggle('active', !automatic);
     $('#autoModeBtn').setAttribute('aria-pressed', String(automatic));
     $('#manualModeBtn').setAttribute('aria-pressed', String(!automatic));
-    $('#controlModeHint').textContent = automatic ? 'Automatic decisions enabled' : 'Manual signal control enabled';
+    $('#controlModeHint').textContent = automatic ? 'Automatic strategy preview' : 'Manual control preview';
     updateSignal();
-    addEvent('Control mode changed', automatic ? 'Automatic mode enabled' : 'Manual override enabled', 'info');
+    addEvent('Control mode changed', automatic ? 'Automatic strategy preview selected' : 'Manual preview selected', 'info');
   }
 
   function updateRisk() {
@@ -74,6 +74,25 @@
     pill.textContent = risk.toUpperCase();
     $('#blockDuration').textContent = `00:${String(state.duration).padStart(2, '0')}`;
   }
+
+  const sectionLinks = [...document.querySelectorAll('.sidebar .nav-item[href^="#"]')];
+  const sectionObserver = new IntersectionObserver((entries) => {
+    const current = entries.filter((entry) => entry.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (!current) return;
+    const sectionId = `#${current.target.id}`;
+    sectionLinks.forEach((link) => {
+      const active = link.getAttribute('href') === sectionId;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+    $('#breadcrumbCurrent').textContent = current.target.dataset.sectionName;
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: [0, 0.1, 0.35] });
+  sectionLinks.forEach((link) => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) sectionObserver.observe(target);
+  });
 
   const chartValues = [5, 8, 7, 11, 9, 14, 12, 10, 16, 12, 9, 8];
   function drawChart() {
@@ -134,7 +153,7 @@
     $('#videoFileName').textContent = file.name;
     $('#feedClock').textContent = 'LOCAL PREVIEW';
     addEvent('Video selected', `${file.name} · preview only`, 'info');
-    notify('Video preview loaded. Detection needs the vision backend.');
+    notify('Video preview loaded. Vehicle detection requires the vision service.');
   }
 
   function showReport(file) {
@@ -144,9 +163,9 @@
       return;
     }
     $('#reportName').textContent = file.name;
-    $('#reportSummary').textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB · awaiting backend analysis`;
-    addEvent('Traffic report uploaded', `${file.name} · not parsed in frontend`, 'info');
-    notify('Report selected. PDF parsing needs the analytics backend.');
+    $('#reportSummary').textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB · awaiting report analysis service`;
+    addEvent('Traffic report selected', `${file.name} · awaiting analysis service`, 'info');
+    notify('Report selected. Analysis will be available when the analytics service is connected.');
   }
 
   $('#autoModeBtn').addEventListener('click', () => setControl('auto'));
@@ -154,8 +173,8 @@
   $('#overrideBtn').addEventListener('click', () => {
     if (state.control !== 'manual') return;
     state.mode = state.mode === 'Free-left' ? 'Protected-left' : 'Free-left';
-    updateSignal('Changed by manual override');
-    addEvent('Signal mode changed', `Manual override set ${state.mode}`, 'warn');
+    updateSignal(`Manual preview set to ${state.mode}`);
+    addEvent('Signal preview updated', `Manual preview set to ${state.mode}`, 'warn');
   });
   $('#thresholdRange').addEventListener('input', (event) => {
     state.threshold = Number(event.target.value);
@@ -169,14 +188,14 @@
   $('#refreshBtn').addEventListener('click', () => {
     drawChart();
     updateRisk();
-    notify('Dashboard refreshed. Demo values are unchanged.');
+    notify('Dashboard view refreshed. Sample values remain unchanged.');
   });
   $('#modeInfoBtn').addEventListener('click', () => $('#infoDialog').showModal());
-  $('#viewAllEvents').addEventListener('click', () => notify('Showing the latest 8 events. Full history will be available from the backend.'));
+  $('#viewAllEvents').addEventListener('click', () => notify('Showing the latest 8 events. Full history requires the event service.'));
   $('#exportBtn').addEventListener('click', () => {
     const rows = [
       ['Traffic dashboard report', new Date().toLocaleString()],
-      ['Data source', 'Demo values; not live controller data'],
+      ['Data source', 'Sample values; not live controller data'],
       ['Signal mode', state.mode],
       ['Control mode', state.control],
       ['Vehicles in free-left lane', state.count],
@@ -191,20 +210,20 @@
     const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' }));
     const link = document.createElement('a');
     link.href = url;
-    link.download = `flowpilot-report-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = `intersection-report-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
     URL.revokeObjectURL(url);
-    notify('Demo traffic report exported as CSV.');
+    notify('Traffic report exported as CSV with sample values.');
   });
   $('#infoDialog').addEventListener('click', (event) => { if (event.target === event.currentTarget) event.currentTarget.close(); });
   window.addEventListener('resize', drawChart);
   window.addEventListener('beforeunload', () => { if (fileUrl.video) URL.revokeObjectURL(fileUrl.video); });
 
   const initialEvents = [
-    ['Adaptive controller active', 'Free-left permitted · risk low', 'Normal', 'ok'],
-    ['Vehicle flow updated', '8 vehicles in free-left lane', 'Normal', 'ok'],
-    ['Camera source unavailable', 'Using sample intersection view', 'Info', 'info'],
-    ['Historical report pending', 'Upload a traffic PDF for analysis', 'Info', 'info']
+    ['Intersection dashboard initialized', 'Sample metrics loaded for Junction A · North', 'Normal', 'ok'],
+    ['Sample traffic flow loaded', '8 vehicles in free-left lane', 'Normal', 'ok'],
+    ['Camera feed unavailable', 'Live camera service is not connected', 'Info', 'info'],
+    ['Report analysis unavailable', 'Analytics service is not connected', 'Info', 'info']
   ];
   state.events = initialEvents.map(([type, detail, , level]) => ({ type, detail, time: now(), level }));
   renderEvents();
