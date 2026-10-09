@@ -2,7 +2,7 @@
   const $ = (selector) => document.querySelector(selector);
   const logBody = $('#eventLog');
   const toast = $('#toast');
-  const fileUrl = { video: null };
+  const fileUrl = { video: null, pedestrian: null, opposite: null };
   const state = {
     mode: 'Free-left',
     control: 'auto',
@@ -156,7 +156,7 @@
     notify('Video preview loaded. Vehicle detection requires the vision service.');
   }
 
-  function showReport(file) {
+  function showCameraVideo(file,camera){if(!file)return;if(!file.type.startsWith('video/')){notify('Choose a video file to preview.');return;}if(fileUrl[camera])URL.revokeObjectURL(fileUrl[camera]);fileUrl[camera]=URL.createObjectURL(file);const video=document.getElementById(camera+'Preview');video.src=fileUrl[camera];video.hidden=false;document.getElementById(camera+'FileName').textContent=file.name;const label=camera==='pedestrian'?'Pedestrian crossing':'Opposite lane';addEvent(label+' video selected',file.name+' · local preview only','info');notify(label+' video loaded for local preview. Vehicle detection requires the vision service.')}function showReport(file) {
     if (!file) return;
     if (!file.name.toLowerCase().endsWith('.pdf') && file.type !== 'application/pdf') {
       notify('Choose a PDF traffic report.');
@@ -182,7 +182,7 @@
     $('#thresholdLabel').textContent = state.threshold;
     updateRisk();
   });
-  $('#videoUpload').addEventListener('change', (event) => showVideo(event.target.files[0]));
+  $('#videoUpload').addEventListener('change', (event) => showVideo(event.target.files[0]));$('#pedestrianUpload').addEventListener('change', (event) => showCameraVideo(event.target.files[0], 'pedestrian'));$('#oppositeUpload').addEventListener('change', (event) => showCameraVideo(event.target.files[0], 'opposite'));
   $('#reportUpload').addEventListener('change', (event) => showReport(event.target.files[0]));
   $('#chartRange').addEventListener('change', drawChart);
   $('#refreshBtn').addEventListener('click', () => {
@@ -217,7 +217,7 @@
   });
   $('#infoDialog').addEventListener('click', (event) => { if (event.target === event.currentTarget) event.currentTarget.close(); });
   window.addEventListener('resize', drawChart);
-  window.addEventListener('beforeunload', () => { if (fileUrl.video) URL.revokeObjectURL(fileUrl.video); });
+  window.addEventListener('beforeunload', () => { Object.values(fileUrl).forEach((url) => { if (url) URL.revokeObjectURL(url); }); });
 
   const initialEvents = [
     ['Intersection dashboard initialized', 'Sample metrics loaded for Junction A · North', 'Normal', 'ok'],
